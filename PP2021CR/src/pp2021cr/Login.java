@@ -16,7 +16,7 @@ public class Login extends LoginChain {
     }
 
     @Override
-    public void efetuarLogin() {
+    protected void efetuarLogin() {
         System.out.println("Pode efetuar login.");
     }
 

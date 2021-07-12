@@ -13,7 +13,7 @@ public class Main {
 
     public static void main(String[] args) {
         String nomeLogin1 = "eduardo";
-        String senhaLogin1 = "tesTe123";
+        String senhaLogin1 = "@Senha1";
         String nomeLogin2 = "dayanne";
         String senhaLogin2 = "testando";
         String nomeLogin3 = "eunice";
@@ -23,11 +23,14 @@ public class Main {
         login.setNext(new Login(nomeLogin3, senhaLogin3));
 
         try {
-            login.contemMaiusculo(senhaLogin1);
-            login.contemMinusculo(senhaLogin1);
-            login.contemNumero(senhaLogin1);
-            login.contemMinimoCaracter(senhaLogin1.length());
-            login.contemMaximoCaracter(senhaLogin1.length());
+            boolean contemMaiusculo = login.contemMaiusculo(senhaLogin1);
+            boolean contemMinusculo = login.contemMinusculo(senhaLogin1);
+            boolean contemNumero = login.contemNumero(senhaLogin1);
+            boolean contemMinimoCaracter = login.contemMinimoCaracter(senhaLogin1.length());
+            boolean contemMaximoCaracter = login.contemMaximoCaracter(senhaLogin1.length());
+            boolean semConsecutivo = login.semConsecutivo(senhaLogin1);
+            
+            login.podeEfetuarLogin(contemMaiusculo, contemMinusculo, contemNumero, contemMinimoCaracter, contemMaximoCaracter, semConsecutivo);
         } catch (Exception err) {
             err.printStackTrace();
         }
