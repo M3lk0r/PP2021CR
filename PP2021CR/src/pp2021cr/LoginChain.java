@@ -9,7 +9,6 @@ package pp2021cr;
  *
  * @author eduar
  */
-import java.util.function.IntPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,96 +32,49 @@ public abstract class LoginChain {
         }
     }
 
-    protected abstract void efetuarLogin();
+    public abstract void efetuarLogin();
 
-    public boolean contemMinusculo(String senha) {
-        return contem(senha, i -> Character.isLetter(i) && Character.isLowerCase(i));
-    }
+    private static final String senhaPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,16}$";
 
-    public boolean contemMaiusculo(String senha) {
-        return contem(senha, i -> Character.isLetter(i) && Character.isUpperCase(i));
-    }
+    private static final Pattern pattern = Pattern.compile(senhaPattern);
 
-    public boolean contemNumero(String senha) {
-        return contem(senha, Character::isDigit);
-    }
-
-    public boolean contem(String senha, IntPredicate predicate) {
-        return senha.chars().anyMatch(predicate);
-    }
-
-    public boolean contemMinimoCaracter(int quantidade) {
-        return quantidade >= 8 ? true : false;
-    }
-
-    public boolean contemMaximoCaracter(int quantidade) {
-        return quantidade <= 16 ? true : false;
-    }
-    
-    /*
-    public boolean semConsecutivo(String senha)
-    {
-        int start;
-        int result = -99;
-
-        int length = senha.length();
-
-        // find the number till half of the String
-        for (int i = 0; i < length / 2; i++) 
-        {
-            // new String containing the starting
-            // substring of input String
-            String new_str = senha.substring(0, i + 1);
-
-            // converting starting substring into number
-            int num = Integer.parseInt(new_str);
-
-            // backing up the starting number in start
-            start = num;
-
-            // while loop until the new_String is 
-            // smaller than input String
-            while (new_str.length() < length) 
-            {
-
-                // next number
-                num++;
-
-                // concatenate the next number
-                new_str = new_str + String.valueOf(num);
-            }
-
-            // check if new String becomes equal to
-            // input String
-            if (new_str.equals(senha)){
-                result = start;
-                return false;
-            }
-            
-        }
-
-        // if String doesn't contains consecutive numbers
-        return true;
-  
-    }*/
-    public boolean semConsecutivo(String senha){
-        //String pattern = "^((?=.*[@#$%^&+=]).*)";
-        //return senha.matches(pattern);
-        
-        String PASSWORD_PATTERN = "^(?=.*[!@#&()–[{}]:;',?/*~$^+=<>])";
-
-        Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+    public static boolean valido(final String senha) {
         Matcher matcher = pattern.matcher(senha);
-        return matcher.matches();
+        boolean resultado = matcher.matches();
+
+        if (resultado == true) {
+            return validarSequenciaConsecutiva(senha);
+        }
+        return false;
     }
-    
-    
-    public void podeEfetuarLogin(boolean contemMaiusculo, boolean contemMinusculo, boolean contemNumero, boolean contemMinimoCaracter, boolean contemMaximoCaracter, boolean semConsecutivo) throws Exception {
-        if (contemMaiusculo == false|| contemMinusculo == false || contemNumero == false || contemMinimoCaracter == false || contemMaximoCaracter == false || semConsecutivo == false){
+
+    public void podeEfetuarLogin(boolean valido) throws Exception {
+        if (valido == false) {
             throw new Exception("Favor informar uma senha válida que condiz com as condições de senha forte.");
         }
-        else {
-            efetuarLogin();
+        efetuarLogin();
+    }
+
+    public static boolean validarSequenciaConsecutiva(String senha) {
+        char senhaCaractereArray[] = senha.toCharArray(); //cada caractere separado
+        int codigoAscii = 0;
+        boolean sequenciaNaoConsecutiva = true;
+        int codigoAsciiAnterior = 0;
+        int countSequencia = 0;
+
+        for (int i = 0; i < senhaCaractereArray.length; i++) {
+            codigoAscii = senhaCaractereArray[i]; //tabela código ascii
+            if ((codigoAsciiAnterior + 1) == codigoAscii) {
+                countSequencia++;
+                if (countSequencia >= 2) {
+                    sequenciaNaoConsecutiva = false;
+                    break;
+                }
+            } else {
+                countSequencia = 0;
+            }
+            codigoAsciiAnterior = codigoAscii;
         }
+        return sequenciaNaoConsecutiva;
     }
 }
